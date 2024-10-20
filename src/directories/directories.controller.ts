@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
-import { Controller, Get, Post, Body, Query, Param, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, Param, Put, Delete, Patch } from '@nestjs/common';
 import { DirectoriesService } from './directories.service';
 import { Directory } from './directory.entity';
 import { createDirectoryDto } from './createDirectoryDto';
@@ -9,7 +9,7 @@ import { updateDirectoryDto } from './updateDirectoryDto';
 
 @Controller()
 export class DirectoriesController {
-  constructor(private readonly directoriesService: DirectoriesService) {}
+  constructor(private readonly directoriesService: DirectoriesService) { }
 
   @Get('/status')
   getStatus(): string {
@@ -38,8 +38,23 @@ export class DirectoriesController {
   async updateDirectory(
     @Param('id') id: string,
     @Body() updateDirectoryDto: updateDirectoryDto
-  ): Promise<Directory>{
+  ): Promise<Directory> {
     console.log(updateDirectoryDto)
-    return this.directoriesService.updateDirectory(+id,updateDirectoryDto)
+    return this.directoriesService.updateDirectory(+id, updateDirectoryDto)
+  }
+
+  @Delete('/directories/:id')
+  async deleteDirectory(
+    @Param('id') id: string
+  ): Promise<{}> {
+    return this.directoriesService.deleteById(+id)
+  }
+
+  @Patch('/directories/:id')
+  async updatePartialDirectory(
+    @Param('id') id: string,
+    @Body() updateDirectoryDto: updateDirectoryDto
+  ): Promise<Directory> {
+    return this.directoriesService.updateDirectory(+id, updateDirectoryDto)
   }
 }

@@ -17,7 +17,7 @@ export class DirectoriesService {
   constructor(
     @InjectRepository(Directory)
     private readonly directoryRepository: Repository<Directory>,
-  ) {}
+  ) { }
 
   getStatus(): string {
     return 'pong';
@@ -56,7 +56,7 @@ export class DirectoriesService {
     return this.directoryRepository.save(directory);
   }
 
-  async getById(id: number): Promise<Directory>{
+  async getById(id: number): Promise<Directory> {
 
     const directoy = await this.directoryRepository.findOne({ where: { id } });
     if (!directoy) {
@@ -65,7 +65,7 @@ export class DirectoriesService {
     return directoy;
   }
 
-  async updateDirectory(id: number, data: updateDirectoryDto): Promise<Directory>{
+  async updateDirectory(id: number, data: updateDirectoryDto): Promise<Directory> {
     const directory = await this.directoryRepository.findOne({ where: { id } });
 
     const updatedDirectory = { ...directory, ...data };
@@ -76,5 +76,14 @@ export class DirectoriesService {
     }
 
     return await this.directoryRepository.save(updatedDirectory);
+  }
+
+
+  async deleteById(id: number) {
+    const directory = await this.directoryRepository.findOne({ where: { id } });
+    if (!directory) {
+      throw new NotFoundException(`Directoy with ID ${id} not found`);
+    }
+    return this.directoryRepository.delete(id)
   }
 }
