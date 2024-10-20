@@ -1,6 +1,11 @@
-import { Controller, Get, Post, Body, Query } from '@nestjs/common';
+/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable prettier/prettier */
+import { Controller, Get, Post, Body, Query, Param, Put } from '@nestjs/common';
 import { DirectoriesService } from './directories.service';
 import { Directory } from './directory.entity';
+import { createDirectoryDto } from './createDirectoryDto';
+import { updateDirectoryDto } from './updateDirectoryDto';
 
 @Controller()
 export class DirectoriesController {
@@ -19,8 +24,22 @@ export class DirectoriesController {
 
   @Post('/directories')
   async create(
-    @Body() createDirectoryDto: { name: string; emails: string[] },
+    @Body() createDirectoryDto: createDirectoryDto,
   ): Promise<Directory> {
     return this.directoriesService.create(createDirectoryDto);
+  }
+
+  @Get('/directories/:id')
+  async getOne(@Param('id') id: string): Promise<Directory> {
+    return this.directoriesService.getById(+id)
+  }
+
+  @Put('/directories/:id')
+  async updateDirectory(
+    @Param('id') id: string,
+    @Body() updateDirectoryDto: updateDirectoryDto
+  ): Promise<Directory>{
+    console.log(updateDirectoryDto)
+    return this.directoriesService.updateDirectory(+id,updateDirectoryDto)
   }
 }

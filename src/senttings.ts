@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 // src/settings.ts
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { config } from 'dotenv';

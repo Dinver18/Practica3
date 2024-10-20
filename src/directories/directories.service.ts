@@ -1,4 +1,6 @@
-import { Injectable } from '@nestjs/common';
+/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import {
@@ -8,6 +10,7 @@ import {
 } from 'nestjs-typeorm-paginate';
 import { Directory } from './directory.entity';
 import { PAGE_LIMIT } from '../senttings';
+import { updateDirectoryDto } from './updateDirectoryDto';
 
 @Injectable()
 export class DirectoriesService {
@@ -51,5 +54,27 @@ export class DirectoriesService {
   }): Promise<Directory> {
     const directory = this.directoryRepository.create(createDirectoryDto);
     return this.directoryRepository.save(directory);
+  }
+
+  async getById(id: number): Promise<Directory>{
+
+    const directoy = await this.directoryRepository.findOne({ where: { id } });
+    if (!directoy) {
+      throw new NotFoundException(`Directoy with ID ${id} not found`);
+    }
+    return directoy;
+  }
+
+  async updateDirectory(id: number, data: updateDirectoryDto): Promise<Directory>{
+    const directory = await this.directoryRepository.findOne({ where: { id } });
+
+    const updatedDirectory = { ...directory, ...data };
+    console.log(updatedDirectory)
+
+    if (!directory) {
+      throw new NotFoundException(`Directoy with ID ${id} not found`);
+    }
+
+    return await this.directoryRepository.save(updatedDirectory);
   }
 }
