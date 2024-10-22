@@ -6,6 +6,7 @@ import { DirectoriesService } from './directories.service';
 import { Directory } from './directory.entity';
 import { createDirectoryDto } from './createDirectoryDto';
 import { updateDirectoryDto } from './updateDirectoryDto';
+import { DeleteResult } from 'typeorm';
 
 @Controller()
 export class DirectoriesController {
@@ -46,7 +47,8 @@ export class DirectoriesController {
   @Delete('/directories/:id')
   async deleteDirectory(
     @Param('id') id: string
-  ): Promise<{}> {
+  ): Promise<DeleteResult> {
+    console.log(id)
     return this.directoriesService.deleteById(+id)
   }
 

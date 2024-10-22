@@ -1,14 +1,11 @@
-version: '3.9'
-
 services:
 
-  postgres:
+  postgres_database:
     image: postgres:14.3
     restart: always
     ports:
       - "${DATABASE_PORT}:5432"
     environment:
-      DATABASE_HOST: 127.0.0.1
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
       POSTGRES_DB: ${DATABASE_NAME}
       POSTGRES_USER: ${DATABASE_USERNAME}
@@ -17,7 +14,10 @@ services:
       - Practica3-network
     volumes:
       - ./postgres:/var/lib/postgresql/data
-
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      start_period: 30s
+      
   pgadmin:
     image: dpage/pgadmin4
     environment:
@@ -26,10 +26,30 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - postgres
+      - postgres_database
     networks:
       - Practica3-network
 
+  api:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '${PORT}:${PORT}'
+    depends_on:
+      postgres_database:
+        condition: service_healthy
+    environment:
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_HOST: postgres_database
+      DATABASE_PORT: ${DATABASE_PORT}
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      PORT: ${PORT}
+    env_file: ".env"       
+    networks:
+      - Practica3-network
+   
 networks:
   Practica3-network:
     driver: bridge
