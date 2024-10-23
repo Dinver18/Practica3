@@ -24,7 +24,7 @@ PORT=tu_puerto_de_servidor
 # Ejecucion
 Ejecute el  siguiente comando para iniciar el servicio.
 ```bash
-$ docker-compose up -d
+$ docker compose up -d
 ```
 
 ## Autores
