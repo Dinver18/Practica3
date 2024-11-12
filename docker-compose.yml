@@ -13,22 +13,11 @@ services:
     networks:
       - Practica3-network
     volumes:
-      - ./postgres:/var/lib/postgresql/data
+      - /postgres:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD", "pg_isready"]
       start_period: 30s
-      
-  pgadmin:
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-    ports:
-      - "80:80"
-    depends_on:
-      - postgres_database
-    networks:
-      - Practica3-network
+    user: ${DATABASE_USERNAME}
 
   api:
     build: 

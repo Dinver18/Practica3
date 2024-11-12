@@ -1,0 +1,42 @@
+services:
+
+  postgres_database:
+    image: postgres:14.3
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: secret_2
+      POSTGRES_DB: db
+      POSTGRES_USER: practica3_user
+    networks:
+      - Practica3-network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      start_period: 30s
+      
+  api:
+    image: dinver20/api-practica3:latest
+    restart: always
+    ports:
+      - '3000:3000'
+    depends_on:
+      postgres_database:
+        condition: service_healthy
+    environment:
+      DATABASE_PASSWORD: secret_2
+      DATABASE_NAME: db
+      DATABASE_HOST: postgres_database
+      DATABASE_USERNAME: practica3_user
+    networks:
+      - Practica3-network
+   
+networks:
+  Practica3-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  
