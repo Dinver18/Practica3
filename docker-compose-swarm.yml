@@ -36,3 +36,7 @@ networks:
 volumes:
   postgres-data:
     driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=nfs01,rw"
+      device: ":/data/docker-vols/grupo6/postgres_data"
