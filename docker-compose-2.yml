@@ -8,7 +8,7 @@ services:
     environment:
       POSTGRES_PASSWORD: secret_2
       POSTGRES_DB: db
-      POSTGRES_USER: practica3_user
+      POSTGRES_USER: postgres
     networks:
       - Practica3-network
     volumes:
@@ -16,6 +16,7 @@ services:
     healthcheck:
       test: ["CMD", "pg_isready"]
       start_period: 30s
+    user: postgres
       
   api:
     image: dinver20/api-practica3:latest
@@ -29,7 +30,7 @@ services:
       DATABASE_PASSWORD: secret_2
       DATABASE_NAME: db
       DATABASE_HOST: postgres_database
-      DATABASE_USERNAME: practica3_user
+      DATABASE_USERNAME: postgres
     networks:
       - Practica3-network
    
